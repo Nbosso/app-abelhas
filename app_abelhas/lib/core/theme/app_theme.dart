@@ -99,7 +99,7 @@ class AppTheme {
         centerTitle: true,
         backgroundColor: backgroundColor,
         foregroundColor: neutralColor,
-        // actionsPadding: EdgeInsets.only(right: SeventhAppSpacing.p8),
+        // actionsPadding: EdgeInsets.only(right: AppSpacing.p8),
         titleTextStyle: AppTextStyle.titleMedium(neutralColor),
       ),
       snackBarTheme: SnackBarThemeData(

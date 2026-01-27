@@ -70,8 +70,8 @@ class AppStyle extends ThemeExtension<AppStyle> {
   }
 }
 
-class SeventhColorPalette {
-  const SeventhColorPalette({
+class AppColorPalette {
+  const AppColorPalette({
     required this.color100,
     required this.color200,
     required this.color300,

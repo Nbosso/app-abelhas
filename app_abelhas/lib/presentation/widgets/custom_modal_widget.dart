@@ -19,7 +19,7 @@ class CustomModalWidget {
     // final locale = AppLocalizations.of(context)!;
     return showIconModal(
         title: title ?? 'Sucesso',
-        // iconPath: SeventhAppIconPaths.iconSuccessOutline,
+        // iconPath: AppIconPaths.iconSuccessOutline,
         context: context,
         message: message ?? '-',
         showCloseButton: showCloseButton,
@@ -40,7 +40,7 @@ class CustomModalWidget {
     // final locale = AppLocalizations.of(context)!;
     return showIconModal(
         title: title ?? '-',
-        // iconPath: SeventhAppIconPaths.iconFailureOutline,
+        // iconPath: AppIconPaths.iconFailureOutline,
         context: context,
         message: message ?? '-',
         showCloseButton: showCloseButton,
@@ -68,7 +68,7 @@ class CustomModalWidget {
       isFullscreenMode: isFullscreenMode,
       content: Column(
         children: [
-          // SeventhSvgWidget(
+          // AppSvgWidget(
           //   path: iconPath,
           //   height: 128,
           //   width: 128,
