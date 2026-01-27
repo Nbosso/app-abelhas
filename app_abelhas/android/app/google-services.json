@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1015502140465",
+    "project_id": "app-abelhas-11f09",
+    "storage_bucket": "app-abelhas-11f09.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015502140465:android:a654f1508cb2dac9711110",
+        "android_client_info": {
+          "package_name": "com.example.app_abelhas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6era9QZB5d_xP0lJg-klZB8_f4cCv6FA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
