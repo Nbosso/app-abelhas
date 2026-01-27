@@ -107,6 +107,7 @@ lib/
 │   └── widgets/
 │
 └── main.dart
+```
 
 ---
 
