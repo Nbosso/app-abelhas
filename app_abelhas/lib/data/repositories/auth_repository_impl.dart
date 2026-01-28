@@ -35,7 +35,8 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, void>> signIn(String email, String password) async {
     try {
-      await _authDatasource.signIn(email, password);
+      final fcmToken = await firebaseMessagingService.getFirebaseToken() ?? '';
+      await _authDatasource.signIn(email, password, fcmToken);
       return right(null);
     } catch (e) {
       return left(Failure(e.toString()));

@@ -6,12 +6,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 abstract class AbstractFirebaseMessagingService {
   Future<String?> initialize();
 
-  void setUpOnMessage(
-      {required Function(RemoteMessage? remoteMessage)
-          callbackFunctionOnMessage});
-  void setUpOnMessageOpenedApp(
-      {required Function(RemoteMessage? remoteMessage)
-          callbackFunctionOnMessageOpenedApp});
+  void setUpOnMessage();
+  void setUpOnMessageOpenedApp();
   Future<String?> getFirebaseToken();
   Future<void> deleteFirebaseToken();
 }
@@ -23,16 +19,17 @@ class FirebaseMessagingService extends AbstractFirebaseMessagingService {
   Future<String?> initialize() async {
     await FirebaseMessaging.instance.requestPermission();
     final firebaseToken = await getFirebaseToken();
+    setUpOnMessage();
+    setUpOnMessageOpenedApp();
     return firebaseToken;
   }
 
   @override
-  void setUpOnMessage({
-    required Function(RemoteMessage message) callbackFunctionOnMessage,
-  }) {
+  void setUpOnMessage() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      log('New notification');
       // 1️⃣ Chama o callback (ex: Cubit / Provider / Navegação)
-      callbackFunctionOnMessage(message);
+      // callbackFunctionOnMessage(message);
 
       // 2️⃣ Mostra notificação local no foreground
       final title =
@@ -48,15 +45,14 @@ class FirebaseMessagingService extends AbstractFirebaseMessagingService {
   }
 
   @override
-  void setUpOnMessageOpenedApp(
-      {required Function(RemoteMessage? remoteMessage)
-          callbackFunctionOnMessageOpenedApp}) {
-    FirebaseMessaging.onMessageOpenedApp
-        .listen(callbackFunctionOnMessageOpenedApp);
+  void setUpOnMessageOpenedApp() {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      log('Message: ${message}');
+    });
 
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((message) => callbackFunctionOnMessageOpenedApp(message));
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      log('Initial Message: ${message?.notification?.title ?? '--'}');
+    });
   }
 
   @override

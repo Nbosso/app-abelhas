@@ -150,13 +150,18 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ),
                                   const SizedBox(height: 24),
-                                  CustomButtonWidget(
-                                      type: CustomButtonType.primary,
-                                      label: 'Entrar',
-                                      isLoading: state is LoginLoading,
-                                      onPressed: () {
-                                        _login();
-                                      }),
+                                  BlocBuilder<LoginCubit, LoginState>(
+                                    bloc: _cubit,
+                                    builder: (context, state) {
+                                      return CustomButtonWidget(
+                                          type: CustomButtonType.primary,
+                                          label: 'Entrar',
+                                          isLoading: state is LoginLoading,
+                                          onPressed: () {
+                                            _login();
+                                          });
+                                    },
+                                  ),
                                   SizedBox(
                                       height: displayHeight(context) * 0.07),
                                   Align(

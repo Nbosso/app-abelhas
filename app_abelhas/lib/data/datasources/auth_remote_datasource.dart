@@ -30,15 +30,20 @@ class AuthDatasource {
     });
 
     await _supabaseService.client.from('user_devices').insert({
+      'user_id': userId,
       'fcm_token': fcmToken,
     });
   }
 
-  Future<void> signIn(String email, String password) async {
+  Future<void> signIn(String email, String password, String fcmToken) async {
     final response = await _supabaseService.client.auth.signInWithPassword(
       email: email,
       password: password,
     );
+    await _supabaseService.client.from('user_devices').upsert({
+      'user_id': response.user?.id,
+      'fcm_token': fcmToken,
+    });
 
     if (response.user == null) {
       throw Exception('Erro ao fazer login. Verifique suas credenciais.');
