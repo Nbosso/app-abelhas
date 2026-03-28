@@ -15,7 +15,6 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> login(String email, String password) async {
     emit(LoginLoading());
-    await Future.delayed(Durations.extralong4);
 
     try {
       final result = await authRepository.signIn(email, password);
@@ -27,7 +26,9 @@ class LoginCubit extends Cubit<LoginState> {
         } else {
           emit(LoginError());
         }
-      } else {}
+      } else {
+        emit(LoginError());
+      }
     } on AuthException catch (e) {
       debugPrint('Erro de autenticação: ${e.message}');
       emit(LoginError());

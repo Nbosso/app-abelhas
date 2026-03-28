@@ -16,7 +16,6 @@ class RegisterProvider with ChangeNotifier {
 
   Future<bool> signUp(UserModel user) async {
     _setLoading(true);
-    await Future.delayed(Duration(seconds: 2));
     _errorMessage = null;
 
     final result = await _authRepository.signUp(user);
