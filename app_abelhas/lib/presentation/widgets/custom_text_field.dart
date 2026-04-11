@@ -18,6 +18,7 @@ class CustomTextFormField extends StatefulWidget {
   final TextEditingController? controller;
   final String? initialValue;
   final void Function(String)? onChanged;
+  final String? Function(String?)? validator;
   final int minLines;
   final int maxLines;
 
@@ -29,6 +30,7 @@ class CustomTextFormField extends StatefulWidget {
     this.controller,
     this.initialValue,
     this.onChanged,
+    this.validator,
     this.minLines = 1,
     this.maxLines = 1,
   });
@@ -41,6 +43,11 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   bool _obscureText = true;
 
   String? _validator(String? value) {
+    final customValidation = widget.validator?.call(value);
+    if (customValidation != null) {
+      return customValidation;
+    }
+
     if (widget.isRequired && (value == null || value.trim().isEmpty)) {
       return 'Campo obrigatório';
     }

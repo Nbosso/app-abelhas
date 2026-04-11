@@ -40,13 +40,18 @@ class _MapPageState extends State<MapPage> {
                   type: CustomToastType.success,
                   context: context,
                   title: 'Dados salvos com sucesso!');
-            } else if (state is PlaceRegisteredError ||
-                state is VerifySafeAgrotoxicError) {
+            } else if (state is PlaceRegisteredError) {
               context.pop();
               CustomToastWidget.show(
                   type: CustomToastType.error,
                   context: context,
                   title: 'Ocorreu um erro ao salvar');
+            } else if (state is VerifySafeAgrotoxicError) {
+              context.pop();
+              CustomToastWidget.show(
+                  type: CustomToastType.error,
+                  context: context,
+                  title: 'Ocorreu um erro na verificação');
             }
           },
           buildWhen: (previous, current) =>

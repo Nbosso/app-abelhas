@@ -42,8 +42,12 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   void cancelRegisterPlace() {
-    beehives.remove(beehives.last);
-    markers.remove(markers.last);
+    if (beehives.isNotEmpty) {
+      beehives.remove(beehives.last);
+    }
+    if (markers.isNotEmpty) {
+      markers.remove(markers.last);
+    }
     emit(CancelPlaceRegistered());
   }
 

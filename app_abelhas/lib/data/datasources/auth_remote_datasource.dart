@@ -41,9 +41,9 @@ class AuthDatasource {
       password: password,
     );
     await _supabaseService.client.from('user_devices').upsert({
-      // 'user_id': response.user?.id,
+      'user_id': response.user?.id,
       'fcm_token': fcmToken,
-    });
+    }, onConflict: 'user_id');
 
     if (response.user == null) {
       throw Exception('Erro ao fazer login. Verifique suas credenciais.');

@@ -31,6 +31,7 @@ class SprayAreaDatasource {
           'group_risk': sprayArea.groupRisk,
           'pulv_type': sprayArea.type,
           'name': sprayArea.name,
+          'date': sprayArea.date?.toIso8601String(),
           'affected_user_ids':
               affectedBeehives.map((e) => e.apicultorId).toList(),
         },

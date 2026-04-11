@@ -9,6 +9,7 @@ class SprayArea {
   final String groupRisk;
   final String type;
   final String radius;
+  final DateTime? date;
 
   SprayArea({
     required this.id,
@@ -18,6 +19,7 @@ class SprayArea {
     required this.groupRisk,
     required this.type,
     required this.radius,
+    this.date,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,6 +30,7 @@ class SprayArea {
       'group_risk': groupRisk,
       'type': type,
       'radius': radius,
+      'date': date?.millisecondsSinceEpoch,
     };
   }
 
@@ -40,6 +43,7 @@ class SprayArea {
       groupRisk: map['groupRisk'] ?? '',
       type: map['type'] ?? '',
       radius: map['radius'] ?? '',
+      date: map['date'],
     );
   }
 
