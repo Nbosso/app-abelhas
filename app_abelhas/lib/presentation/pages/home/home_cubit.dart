@@ -10,6 +10,7 @@ import 'package:app_abelhas/data/models/user_model.dart';
 import 'package:app_abelhas/data/repositories/auth_repository_impl.dart';
 import 'package:app_abelhas/data/repositories/beehive_repository_impl.dart';
 import 'package:app_abelhas/data/repositories/spray_area_repository_impl.dart';
+import 'package:app_abelhas/domain/entities/home_tab_itens_entity.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -34,8 +35,19 @@ class HomeCubit extends Cubit<HomeState> {
     getNotifications();
   }
 
+  bool get isAgricultor => user.type == UserType.agricultor.name;
+  bool get isApicultor => user.type == UserType.apicultor.name;
+
+  List<HomeTabItensEntity> get tabs => [
+        HomeTabItensEntity.home,
+        if (isAgricultor) HomeTabItensEntity.history,
+        HomeTabItensEntity.notifications,
+        HomeTabItensEntity.configuracoes,
+        HomeTabItensEntity.profile,
+      ];
+
   void showMessageToRegisterPlace() {
-    var message = user.type == 'Apicultor'
+    var message = isApicultor
         ? 'Selecione um local no mapa para registrar um apiário.'
         : 'Selecione o centro e o raio da sua área de aplicação no mapa.';
     emit(ShowMessageToRegisterPlace(message: message));
@@ -77,6 +89,8 @@ class HomeCubit extends Cubit<HomeState> {
 
   // Map<String, List<NotificationEntity>> notifications = {};
   List<NotificationModel> notifications = [];
+  List<SprayArea> history = [];
+  final Set<String> disablingHistoryIds = {};
 
   UserModel get user => authStateNotifier.user!;
 
@@ -168,7 +182,7 @@ class HomeCubit extends Cubit<HomeState> {
         infoWindow: InfoWindow(
           title: title,
         )));
-    if (user.type != 'Apicultor') return;
+    if (!isApicultor) return;
 
     final List<LatLng> pontosHexagono = _gerarHexagono(coordenadas, 3000);
 
@@ -289,7 +303,7 @@ class HomeCubit extends Cubit<HomeState> {
     return pontos;
   }
 
-  String version = '1.0.0';
+  String version = '1.0.5';
 
   Future<void> getAppVersion() async {
     try {
@@ -307,8 +321,69 @@ class HomeCubit extends Cubit<HomeState> {
     result.fold((f) {
       emit(GetNotificationsError());
     }, (r) {
-      notifications.addAll(r);
+      notifications
+        ..clear()
+        ..addAll(r);
       emit(GetNotificationsLoaded());
     });
+  }
+
+  Future<void> getHistory() async {
+    if (!isAgricultor) return;
+
+    emit(GetHistoryLoading());
+    final result = await sprayAreaRepository.getHistory();
+    result.fold((f) {
+      emit(GetHistoryError());
+    }, (r) {
+      history
+        ..clear()
+        ..addAll(r);
+      emit(GetHistoryLoaded());
+    });
+  }
+
+  Future<void> disableHistoryItem(SprayArea sprayArea) async {
+    if (!_canDisableHistoryItem(sprayArea)) {
+      emit(DisableHistoryItemError());
+      return;
+    }
+
+    disablingHistoryIds.add(sprayArea.id);
+    emit(DisableHistoryItemLoading(itemId: sprayArea.id));
+
+    final result = await sprayAreaRepository.disableHistoryItem(sprayArea.id);
+    result.fold((f) {
+      disablingHistoryIds.remove(sprayArea.id);
+      emit(DisableHistoryItemError());
+    }, (r) async {
+      disablingHistoryIds.remove(sprayArea.id);
+      await getHistory();
+      emit(DisableHistoryItemSuccess());
+    });
+  }
+
+  bool canDisableHistoryItem(SprayArea sprayArea) {
+    return _canDisableHistoryItem(sprayArea);
+  }
+
+  bool _canDisableHistoryItem(SprayArea sprayArea) {
+    if (!sprayArea.enable || sprayArea.date == null) {
+      return false;
+    }
+
+    final today = DateTime.now();
+    final currentDate = DateTime(today.year, today.month, today.day);
+    final sprayDate = DateTime(
+      sprayArea.date!.year,
+      sprayArea.date!.month,
+      sprayArea.date!.day,
+    );
+
+    return sprayDate.isAfter(currentDate);
+  }
+
+  bool isDisablingHistoryItem(String itemId) {
+    return disablingHistoryIds.contains(itemId);
   }
 }

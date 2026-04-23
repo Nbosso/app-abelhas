@@ -14,6 +14,7 @@ import 'package:app_abelhas/presentation/providers/register_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 final getIt = GetIt.instance;
 
@@ -25,6 +26,10 @@ Future<void> init() async {
   // getIt.registerLazySingleton<Supabase>(() => supabase);
 
   // Presentation Layer
+  // getIt.registerFactory(() => SplashCubit(
+  //     authRepository: getIt(),
+  //     supabaseService: getIt(),
+  //     firebaseMessagingService: getIt()));
   getIt.registerFactory(() => HomeCubit(
       authRepository: getIt(),
       beehiveRepository: getIt(),
@@ -77,7 +82,10 @@ void _registerAuthNotifierDependencies() {
 }
 
 Future<void> _registerServicesDependencies() async {
-  getIt.registerLazySingleton(() => SupabaseService());
+  final supabase = Supabase.instance;
+  getIt.registerLazySingleton(() => supabase);
+  getIt.registerLazySingleton(() => SupabaseService(supabase.client));
+
   final firebaseMessage = FirebaseMessaging.instance;
   getIt.registerLazySingleton(() => firebaseMessage);
   getIt.registerLazySingleton<AbstractFirebaseMessagingService>(

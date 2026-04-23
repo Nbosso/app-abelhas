@@ -1,6 +1,7 @@
 import 'package:app_abelhas/core/di/service_locator.dart';
 import 'package:app_abelhas/domain/entities/home_tab_itens_entity.dart';
 import 'package:app_abelhas/presentation/pages/home/home_cubit.dart';
+import 'package:app_abelhas/presentation/pages/home/history/history_page.dart';
 import 'package:app_abelhas/presentation/pages/home/map/map_page.dart';
 import 'package:app_abelhas/presentation/pages/home/notifications/notifications_page.dart';
 import 'package:app_abelhas/presentation/pages/home/profile/profile_page.dart';
@@ -8,6 +9,7 @@ import 'package:app_abelhas/presentation/pages/home/widgets/bottom_navigation_ba
 import 'package:app_abelhas/presentation/pages/settings/settings_page.dart';
 import 'package:app_abelhas/presentation/widgets/custom_button.dart';
 import 'package:app_abelhas/presentation/widgets/custom_modal_widget.dart';
+import 'package:app_abelhas/presentation/widgets/custom_toast_widget.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,21 +31,25 @@ class _HomePageState extends State<HomePage> {
     _cubit.loadMap();
   }
 
-  static final List<Widget> _pages = [
-    const MapPage(),
-    const NotificationsPage(),
-    SettingsPage(),
-    const ProfilePage(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final tabs = _cubit.tabs;
+    final pages = [
+      const MapPage(),
+      if (_cubit.isAgricultor) const HistoryPage(),
+      const NotificationsPage(),
+      SettingsPage(),
+      const ProfilePage(),
+    ];
+
     return BlocProvider(
       create: (_) => _cubit,
       child: BlocConsumer<HomeCubit, HomeState>(
         listenWhen: (previous, current) =>
             current is ShowMessageToRegisterPlace ||
-            current is VerifySafeAgrotoxicAlert,
+            current is VerifySafeAgrotoxicAlert ||
+            current is DisableHistoryItemSuccess ||
+            current is DisableHistoryItemError,
         listener: (context, state) {
           if (state is ShowMessageToRegisterPlace) {
             CustomModalWidget.showConfirmModal(
@@ -68,8 +74,24 @@ class _HomePageState extends State<HomePage> {
               onCancel: () async => context.pop(),
             );
           }
+          if (state is DisableHistoryItemSuccess) {
+            CustomToastWidget.show(
+              type: CustomToastType.success,
+              context: context,
+              title: 'Aplicação desativada com sucesso!',
+            );
+          }
+          if (state is DisableHistoryItemError) {
+            CustomToastWidget.show(
+              type: CustomToastType.error,
+              context: context,
+              title: 'Não foi possível desativar a aplicação',
+            );
+          }
         },
         builder: (context, state) {
+          final currentTab = tabs[_cubit.currentIndex];
+
           return Scaffold(
             appBar: AppBar(
               centerTitle: true,
@@ -86,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       )),
                   Text(
-                    HomeTabItensEntity.values[_cubit.currentIndex].title,
+                    currentTab.title,
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -108,8 +130,7 @@ class _HomePageState extends State<HomePage> {
                           _cubit.cancelRegisterPlace();
                         }),
                   )
-                : HomeTabItensEntity.values[_cubit.currentIndex] ==
-                        HomeTabItensEntity.home
+                : currentTab == HomeTabItensEntity.home
                     ? FloatingActionButton.extended(
                         extendedPadding: EdgeInsets.symmetric(horizontal: 12),
                         foregroundColor: Colors.green.shade700,
@@ -144,9 +165,9 @@ class _HomePageState extends State<HomePage> {
             bottomNavigationBar: state is ResgisteringPlace
                 ? null
                 : HomeBottomNavigatorWidget(
-                    tabItems: HomeTabItensEntity.values,
+                    tabItems: tabs,
                   ),
-            body: _pages[_cubit.currentIndex],
+            body: pages[_cubit.currentIndex],
           );
         },
       ),

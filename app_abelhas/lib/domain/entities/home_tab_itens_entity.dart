@@ -1,13 +1,21 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 
-enum HomeTabItensEntity { home, notifications, configuracoes, profile }
+enum HomeTabItensEntity {
+  home,
+  history,
+  notifications,
+  configuracoes,
+  profile
+}
 
 extension HomeTabItensDetails on HomeTabItensEntity {
   String get title {
     switch (this) {
       case HomeTabItensEntity.home:
         return 'BeeAlert';
+      case HomeTabItensEntity.history:
+        return 'Histórico';
       case HomeTabItensEntity.notifications:
         return 'Notificações';
       case HomeTabItensEntity.configuracoes:
@@ -21,6 +29,8 @@ extension HomeTabItensDetails on HomeTabItensEntity {
     switch (this) {
       case HomeTabItensEntity.home:
         return 'Mapa';
+      case HomeTabItensEntity.history:
+        return 'Histórico';
       case HomeTabItensEntity.notifications:
         return 'Notificações';
       case HomeTabItensEntity.configuracoes:
@@ -34,6 +44,8 @@ extension HomeTabItensDetails on HomeTabItensEntity {
     switch (this) {
       case HomeTabItensEntity.home:
         return FeatherIcons.map;
+      case HomeTabItensEntity.history:
+        return FeatherIcons.clock;
       case HomeTabItensEntity.notifications:
         return FeatherIcons.bell;
       case HomeTabItensEntity.configuracoes:

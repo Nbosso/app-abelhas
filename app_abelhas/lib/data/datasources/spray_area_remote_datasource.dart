@@ -63,4 +63,36 @@ class SprayAreaDatasource {
       return [];
     }
   }
+
+  Future<List<SprayArea>> getHistory() async {
+    final userId = _supabaseService.client.auth.currentUser?.id;
+
+    if (userId == null) {
+      throw Exception('Usuário não autenticado.');
+    }
+
+    try {
+      final response = await _supabaseService.client
+          .from('spray_application')
+          .select()
+          .eq('farmer_id', userId)
+          .order('date');
+
+      return (response as List).map((e) => SprayArea.fromMap(e)).toList();
+    } catch (ex) {
+      log('GetHistory: $ex');
+      rethrow;
+    }
+  }
+
+  Future<void> disableHistoryItem(String sprayAreaId) async {
+    try {
+      await _supabaseService.client
+          .from('spray_application')
+          .update({'enable': false}).eq('id', sprayAreaId);
+    } catch (ex) {
+      log('DisableHistoryItem: $ex');
+      rethrow;
+    }
+  }
 }

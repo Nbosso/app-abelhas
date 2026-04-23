@@ -15,8 +15,7 @@ class _HomeBottomNavigatorWidgetState extends State<HomeBottomNavigatorWidget> {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<HomeCubit>();
-
-    final tabItems = HomeTabItensEntity.values;
+    final tabItems = widget.tabItems;
 
     return Container(
       decoration: BoxDecoration(

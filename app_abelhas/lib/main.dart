@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 // import 'firebase_options.dart'; // Import firebase_options.dart
 // import 'package:firebase_core/firebase_core.dart'; // Import firebase_core
 
@@ -18,6 +19,11 @@ void main() async {
   );
   await LocalNotificationService.initialize();
   await dotenv.load(fileName: ".env");
+  // Initialize Supabase
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+  );
   await di.init();
   runApp(const MyApp());
 }

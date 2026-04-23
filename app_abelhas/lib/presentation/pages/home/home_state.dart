@@ -64,3 +64,19 @@ class GetNotificationsError extends HomeState {}
 class GetNotificationsLoaded extends HomeState {}
 
 class GetNotificationsLoading extends HomeState {}
+
+class GetHistoryError extends HomeState {}
+
+class GetHistoryLoaded extends HomeState {}
+
+class GetHistoryLoading extends HomeState {}
+
+class DisableHistoryItemLoading extends HomeState {
+  final String itemId;
+
+  DisableHistoryItemLoading({required this.itemId});
+}
+
+class DisableHistoryItemSuccess extends HomeState {}
+
+class DisableHistoryItemError extends HomeState {}

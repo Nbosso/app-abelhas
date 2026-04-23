@@ -200,45 +200,47 @@ class _NotificationTile extends StatelessWidget {
         //     .markAsRead(notification);
       },
       borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color:
-              notification.read ? Colors.grey.shade100 : Colors.green.shade50,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: notification.read
-                ? Colors.grey.shade300
-                : Colors.green.shade300,
+      child: Card(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color:
+                notification.read ? Colors.grey.shade100 : Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: notification.read
+                  ? Colors.grey.shade300
+                  : Colors.grey.shade300,
+            ),
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              notification.title,
-              style: TextStyle(
-                fontWeight:
-                    notification.read ? FontWeight.w500 : FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              notification.message,
-              style: const TextStyle(fontSize: 14),
-            ),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                _formatDate(notification.createdAt),
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                notification.title,
+                style: TextStyle(
+                  fontWeight:
+                      notification.read ? FontWeight.w500 : FontWeight.bold,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                notification.message,
+                style: const TextStyle(fontSize: 14),
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  _formatDate(notification.createdAt),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

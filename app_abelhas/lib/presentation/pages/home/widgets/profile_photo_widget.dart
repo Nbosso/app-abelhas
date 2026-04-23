@@ -1,4 +1,5 @@
 import 'package:app_abelhas/core/helpers/sizes_helper.dart';
+import 'package:app_abelhas/presentation/widgets/custom_toast_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePhotoWidget extends StatefulWidget {
@@ -46,6 +47,10 @@ class _ProfilePhotoWidgetState extends State<ProfilePhotoWidget> {
                   right: -30,
                   child: RawMaterialButton(
                     onPressed: () {
+                      CustomToastWidget.show(
+                          type: CustomToastType.info,
+                          context: context,
+                          title: 'Funcionalidade não disponível no momento.');
                       // showModal(
                       //   title: 'Trocar Foto',
                       //   showCloseButton: true,
@@ -56,12 +61,12 @@ class _ProfilePhotoWidgetState extends State<ProfilePhotoWidget> {
                     },
                     elevation: 2.0,
                     fillColor: Color(0xFFF5F6F9),
+                    padding: EdgeInsets.all(8.0),
+                    shape: CircleBorder(),
                     child: Icon(
                       Icons.camera_alt_outlined,
                       size: 14,
                     ),
-                    padding: EdgeInsets.all(8.0),
-                    shape: CircleBorder(),
                   )),
             ],
           )),

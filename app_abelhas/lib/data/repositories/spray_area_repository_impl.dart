@@ -10,6 +10,8 @@ abstract class SprayAreaRepository {
   Future<Either<Failure, void>> confirmPulverization(
       SprayArea sprayArea, List<AffectedBeehive> affectedBeehives);
   Future<Either<Failure, List<NotificationModel>>> getNotifications();
+  Future<Either<Failure, List<SprayArea>>> getHistory();
+  Future<Either<Failure, void>> disableHistoryItem(String sprayAreaId);
 }
 
 class SprayAreaRepositoryImpl implements SprayAreaRepository {
@@ -44,6 +46,26 @@ class SprayAreaRepositoryImpl implements SprayAreaRepository {
     try {
       final response = await _sprayAreaDatasource.getNotifications();
       return right(response);
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<SprayArea>>> getHistory() async {
+    try {
+      final response = await _sprayAreaDatasource.getHistory();
+      return right(response);
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> disableHistoryItem(String sprayAreaId) async {
+    try {
+      await _sprayAreaDatasource.disableHistoryItem(sprayAreaId);
+      return right(null);
     } catch (e) {
       return left(Failure(e.toString()));
     }

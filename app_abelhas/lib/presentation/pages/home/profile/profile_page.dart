@@ -139,10 +139,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   name: 'Termos',
                   icon: Icons.document_scanner_rounded,
                   onTap: () {
-                    CustomToastWidget.show(
-                        type: CustomToastType.info,
-                        context: context,
-                        title: 'Funcionalidade não disponível no momento.');
+                  CustomToastWidget.show(
+                      type: CustomToastType.info,
+                      context: context,
+                      title: 'Funcionalidade não disponível no momento.');
                   }),
               ProfileItemWidget(
                   name: 'Redefinir Senha',
